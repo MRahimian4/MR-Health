@@ -1,0 +1,2 @@
+# Core dependencies for MR.Health
+pymupdf>=1.24.0
