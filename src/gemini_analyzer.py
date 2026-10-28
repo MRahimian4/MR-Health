@@ -158,14 +158,14 @@ def analyze_checkup(
     api_key: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Executes multimodal medical laboratory analysis using Google Gemini 3.8 Flash.
+    Executes multimodal medical laboratory analysis using Google Clinical AI Engine.
     """
     # 1. Resolve API key
     key = api_key or os.getenv("GEMINI_API_KEY")
     
     if not key or not GENAI_AVAILABLE or len(files) == 0:
-        # Fallback to high-fidelity reference dataset (Mehran Rahimian demo)
-        print("[GeminiAnalyzer] Using baseline clinical reference dataset (Demo/Fallback mode).")
+        # Fallback to high-fidelity reference dataset (Arya Radmanesh (Sample) demo)
+        print("[MedicalAIEngine] Using baseline clinical reference dataset (Demo/Fallback mode).")
         return get_reference_dataset(notes=notes)
 
     try:
@@ -183,7 +183,7 @@ def analyze_checkup(
                 
         # Add audio voice note if provided
         if audio_bytes and len(audio_bytes) > 0:
-            print(f"[GeminiAnalyzer] Processing audio voice note ({len(audio_bytes):,} bytes, {audio_mime})...")
+            print(f"[MedicalAIEngine] Processing audio voice note ({len(audio_bytes):,} bytes, {audio_mime})...")
             contents.append(types.Part.from_bytes(data=audio_bytes, mime_type=audio_mime))
             contents.append("Listen carefully to the audio voice note above. It contains direct patient clinical history, lifestyle habits, symptoms, and surgical notes. Integrate all these findings into the personalized interpretation.")
             
@@ -191,7 +191,7 @@ def analyze_checkup(
         if notes and notes.strip():
             contents.append(f"Additional Patient Notes & Clinical Context:\n{notes.strip()}")
             
-        print("[GeminiAnalyzer] Calling Gemini 3.8 Flash multimodal API...")
+        print("[MedicalAIEngine] Calling Clinical AI Engine multimodal API...")
         response = client.models.generate_content(
             model="gemini-3.8-flash",
             contents=contents,
@@ -204,16 +204,16 @@ def analyze_checkup(
         
         raw_text = response.text
         parsed = json.loads(raw_text)
-        print("[GeminiAnalyzer] Analysis successfully completed and parsed.")
+        print("[MedicalAIEngine] Analysis successfully completed and parsed.")
         return parsed
 
     except Exception as e:
-        print(f"[GeminiAnalyzer] Gemini API call error: {e}. Falling back to reference dataset.")
+        print(f"[MedicalAIEngine] Gemini API call error: {e}. Falling back to reference dataset.")
         return get_reference_dataset(notes=notes)
 
 def get_reference_dataset(notes: str = "") -> Dict[str, Any]:
     """
-    Returns the comprehensive, verified reference dataset for Mehran Rahimian.
+    Returns the comprehensive, verified reference dataset for Arya Radmanesh (Sample).
     """
     from .data import all_parameters
     from .trend_data import trend_items
@@ -237,50 +237,50 @@ def get_reference_dataset(notes: str = "") -> Dict[str, Any]:
     clinical_insights = [
         {
             "num": "۱",
-            "title": "حفظ بی‌نقص کارکرد گلومرولی کلیه در رژیم پرپروتئین",
-            "title_en": "Glomerular Integrity Under High-Protein & Creatine Load",
-            "text": "سطح کراتینین سرم روی ۰.۹۴ mg/dL تثبیت مانده و نرخ فیلتراسیون گلومرولی (eGFR) بالای ۹۰ mL/min محاسبه شد. با وجود دریافت ۵ گرم کراتین مونوهیدرات روزانه و ۴ عدد تخم‌مرغ و مکمل وی، عدم وجود دفع پروتئین در آنالیز ادرار (Proteinuria: Negative) نشان‌دهنده ظرفیت کامل تصفیه کلیه و اثر محافظتی هیدراتاسیون مناسب (مصرف ۳ لیتر آب در روز) است."
+            "title": "پایداری کامل تصفیه گلومرولی کلیه و هیدراتاسیون مناسب",
+            "title_en": "Glomerular Filtration Stability and Optimal Hydration",
+            "text": "سطح کراتینین سرم در محدوده ۰.۹۵ mg/dL تثبیت شده و نرخ فیلتراسیون گلومرولی (eGFR) در بالاترین طبقه سلامت (بالای ۹۰) قرار دارد. منفی بودن دفع پروتئین در آنالیز ادرار نشان می‌دهد دریافت پروتئین‌های تغذیه‌ای و تمرینات ورزشی هیچ‌گونه فشار پاتولوژیک بر نفرون‌های کلیه وارد نکرده است."
         },
         {
             "num": "۲",
-            "title": "پروفایل لیپیدی فوق‌العاده و مهار چربی احشایی",
-            "title_en": "Cardiometabolic Optimization & Sub-50 Triglycerides",
-            "text": "تری‌گلیسرید ۴۸ mg/dL و کلسترول تام ۱۴۶ mg/dL در کنار نسبت محافظتی TG/HDL معادل ۱.۰۲، وضعیت قلبی-عروقی ممتازی را نشان می‌دهد. بافت عضلانی در تمرینات سنگین بدنسازی به عنوان سینک اصلی مصرف تری‌گلیسرید عمل کرده و مال‌ابزربشن ملایم چربی در ساسی بای‌پس از انباشت چربی احشایی کاملاً جلوگیری نموده است."
+            "title": "پروفایل لیپیدی بهینه و شاخص قلبی-عروقی محافظتی",
+            "title_en": "Cardiometabolic Optimization and Sub-60 Triglycerides",
+            "text": "تری‌گلیسرید ۵۶ mg/dL و کلسترول تام ۱۵۸ mg/dL با نسبت آتروژنیک TG/HDL معادل ۱.۱۲، نشان‌دهنده امنیت عروقی فوق‌العاده است. فعالیت‌های ورزشی منظم مانع از تجمع چربی احشایی شده و حساسیت بافت‌ها به مصرف بهینه لیپیدها را تضمین نموده است."
         },
         {
             "num": "۳",
-            "title": "پایداری ویتامین D3 و مهار ریشه‌ای پادرد استخوانی",
-            "title_en": "Vitamin D3 Repletion & Musculoskeletal Stabilization",
-            "text": "غلظت 25-OH D3 با سیر صعودی پیوسته به ۵۸.۱ ng/mL رسیده است. دوز هفتگی ۵۰،۰۰۰ واحد به خوبی سوءجذب ناشی از بای‌پس روده را جبران کرده و دردهای عضلانی-اسکلتی سابق اندام تحتانی (میوپاتی هیپوویتامینوز) را به طور کامل متوقف ساخته است. تست ALP (۱۸۵ U/L) نیز تاییدکننده سلامت بافت استخوانی است."
+            "title": "اشباع مطلوب ویتامین D3 و حفظ سلامت اسکلتی-عضلانی",
+            "title_en": "Vitamin D3 Repletion and Musculoskeletal Support",
+            "text": "غلظت 25-OH D3 با سیر صعودی مطلوب به ۵۴.۲ ng/mL رسیده است. پایش دوره نشان می‌دهد که سطح ویتامین در محدوده ایمن و کارآمد برای جذب کلسیم و ریکاوری تارهای عضلانی قرار گرفته و آنزیم آلکالن فسفاتاز (ALP) نیز ثبات بافت استخوان را تایید می‌کند."
         },
         {
             "num": "۴",
-            "title": "پایش دینامیک ذخایر آهن (فریتین) در هیپرتروفی عضلانی",
-            "title_en": "Ferritin Trajectory & Myoglobin Synthesis Depletion",
-            "text": "افت فریتین به ۹۷ ng/mL در کنار هموگلوبین نرمال (۱۴.۶ g/dL) و MCV نرمال (۸۹.۲ fL)، نشان‌دهنده مصرف فعال ذخایر آهن جهت ساخت میوگلوبین در عضلات جدید و کاهش سطح جذب در دوازدهه بای‌پَس‌شده است. برای حفظ سطح مطلوب در دوره‌های تمرینی پرفشار آتی، گنجاندن مکمل دوره‌ای آهن/زینک توصیه می‌شود."
+            "title": "پایش دینامیک ذخایر فریتین و ظرفیت اکسیژن‌رسانی خون",
+            "title_en": "Ferritin Trajectory and Hemoglobin Oxygen Delivery",
+            "text": "هموگلوبین ۱۴.۹ g/dL و شمارش سلول‌های قرمز خون در محدوده ایده‌آل اکسیژن‌رسانی قرار دارند. با این حال، شیب ملایم کاهشی فریتین نشان‌دهنده مصرف فعال ذخایر آهن در فعالیت‌های ورزشی است که نیازمند پایش در دوره‌های بعدی است."
         }
     ]
     
     action_plan = [
         {
             "step": "گام اول (فوری)",
-            "title": "مدیریت اسپاسم‌های اسکار جراحی جدار شکم",
-            "text": "انقباض ناگهانی موضع جراحی حین خم شدن عمیق، ناشی از چسبندگی لایه‌های فاسیای شکمی زیر فشار تمرینات سنگین است. توصیه: تمرینات کششی زنجیره قدامی، پرهیز از فلکشن ناگهانی پس از تمرین، و استفاده از کمپرس گرم موضعی."
+            "title": "مشورت با پزشک متخصص جهت بررسی کلی نتایج",
+            "text": "ارائه نتایج به پزشک معالج جهت تطبیق بیومارکرها با شرایط بالینی، معاینه فیزیکی و تایید دوزهای روتین مکمل‌های مصرفی."
         },
         {
             "step": "گام دوم (کوتاه‌مدت)",
-            "title": "تعدیل دوز نگهدارنده ویتامین D3 و مینرال‌ها",
-            "text": "با تثبیت ویتامین D3 روی ۵۸ ng/mL، دوز ۵۰،۰۰۰ واحد می‌تواند به هر ۲ یا ۳ هفته یک پرل تقلیل یابد تا سطح خون بین ۵۰ تا ۷۰ تثبیت بماند. پایش دوره‌ای کلسیم سرم (اکنون: ۹.۴) ادامه یابد."
+            "title": "تثبیت دوز نگهدارنده ویتامین D3 و املاح معدنی",
+            "text": "با رسیدن ویتامین D3 به سطح ۵۴ ng/mL، دوز درمانی می‌تواند با صلاحدید پزشک به دوز نگهدارنده تعدیل یابد تا سطح خون در بازه ۵۰ تا ۷۰ ng/mL پایدار بماند."
         },
         {
             "step": "گام سوم (میان‌مدت)",
-            "title": "پایش آهن و ذخیره فریتین در بدنسازی",
-            "text": "برای جلوگیری از افت بیشتر فریتین زیر ۵۰، مصرف منابع غنی آهن با ویتامین C یا مکمل ملایم آهن در روزهای تمرین پرفشار هماهنگ شود."
+            "title": "تنظیم رژیم تغذیه ورزشی و استراحت کافی",
+            "text": "رعایت تعادل دریافت پروتئین، کربوهیدرات‌های پیچیده و نوشیدن حداقل ۲.۵ تا ۳ لیتر آب در روز، به ویژه در روزهای تمرین پرفشار."
         },
         {
             "step": "گام چهارم (دوره‌ای)",
-            "title": "پایش سه‌ماهه با پنل اختصاصی ورزشکاران ساسی بای‌پس",
-            "text": "تکرار آزمایش در بهمن ۱۴۰۵ با تمرکز ویژه بر فریتین، ویتامین D3، کراتینین، الکترولیت‌ها و وضعیت تیروئید."
+            "title": "پایش سالیانه بیومارکرهای کلیدی",
+            "text": "برنامه‌ریزی چکاپ دوره‌ای بعدی جهت سنجش مداوم روند فریتین، ویتامین D3، عملکرد تیروئید و فاکتورهای کبدی-کلیوی."
         }
     ]
     

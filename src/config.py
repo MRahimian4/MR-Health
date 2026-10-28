@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Configuration and constants for MR.Health medical reporting platform.
+Sample data is anonymized and generalized for demonstration purposes.
 """
 from pathlib import Path
 import os
@@ -17,74 +18,74 @@ OUTPUT_DIR = PROJECT_ROOT / "output"
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Patient Demographics & Profile
+# Sample Patient Demographics (Anonymized / Fictional)
 PATIENT_INFO = {
-    "name_fa": "آقای مهران رحیمیان",
-    "name_en": "MR. Mehran Rahimian",
-    "age": 34,
+    "name_fa": "آقای آریا رادمنش (پرونده نمونه)",
+    "name_en": "Mr. Arya Radmanesh (Sample)",
+    "age": 35,
     "gender": "Male / مذکر",
-    "national_id": "0082348561",
-    "reception_date_p1": "۱۴۰۳/۱۲/۲۲",
-    "reception_date_p2": "۱۴۰۴/۰۹/۱۵",
-    "reception_date_p3": "۱۴۰۵/۰۷/۲۴",
-    "lab_name": "آزمایشگاه تخصصی پاتوبیولوژی و ژنتیک امید",
-    "doctor": "آقای دکتر بهروزیان",
-    "weight_kg": 78.0,
-    "height_cm": 178,
-    "bmi": 24.62,
-    "bmr_kcal": 1740,
-    "clinical_status": "پست‌عمل ساسی بای‌پَس (SASI Bypass ~3y) | بدنسازی سنگین ۳ جلسه در هفته",
+    "national_id": "0078912345",
+    "reception_date_p1": "۱۴۰۳/۱۱/۱۸",
+    "reception_date_p2": "۱۴۰۴/۰۸/۲۲",
+    "reception_date_p3": "۱۴۰۵/۰۷/۲۸",
+    "lab_name": "آزمایشگاه تخصصی پاتوبیولوژی و ژنتیک پارس (نمونه)",
+    "doctor": "دکتر کامران شمس (متخصص غدد و متابولیسم)",
+    "weight_kg": 77.5,
+    "height_cm": 180,
+    "bmi": 23.92,
+    "bmr_kcal": 1765,
+    "clinical_status": "پایش دوره‌ای سالیانه سلامت | ورزش فیتنس و رژیم تغذیه ورزشی",
 }
 
-# Executive KPI Metrics
+# Executive KPI Metrics (Fictionalized & Anonymized)
 EXECUTIVE_METRICS = [
     {
         "title_fa": "شاخص توده بدنی (BMI)",
-        "value": "24.62",
+        "value": "23.92",
         "unit": "kg/m²",
-        "status": "محدوده نرمال و کات عضلانی",
+        "status": "محدوده نرمال و متناسب",
         "status_class": "badge-optimal",
-        "desc": "وزن ۷۸ کیلوگرم / قد ۱۷۸ سانتی‌متر"
+        "desc": "وزن ۷۷.۵ کیلوگرم / قد ۱۸۰ سانتی‌متر"
     },
     {
         "title_fa": "نرخ فیلتراسیون کلیوی (eGFR)",
         "value": "> 90",
         "unit": "mL/min/1.73m²",
-        "status": "فیلتراسیون عالی (Stage 1)",
+        "status": "تصفیه گلومرولی بهینه (Stage 1)",
         "status_class": "badge-optimal",
-        "desc": "کراتینین ۰.۹۴ سرم و تصفیه بهینه"
+        "desc": "کراتینین ۰.۹۵ سرم و هیدراتاسیون کافی"
     },
     {
         "title_fa": "شاخص فیبروز کبدی (FIB-4)",
-        "value": "0.90",
+        "value": "0.88",
         "unit": "Score",
-        "status": "بدون فیبروز و کبد کاملاً پاک",
+        "status": "فاقد فیبروز و بافت کبدی سالم",
         "status_class": "badge-optimal",
-        "desc": "ALT: 28 U/L | AST: 29 U/L"
+        "desc": "ALT: 26 U/L | AST: 28 U/L"
     },
     {
         "title_fa": "ویتامین دی سرم (25-OH D3)",
-        "value": "58.1",
+        "value": "54.2",
         "unit": "ng/mL",
-        "status": "اشباع مطلوب و مهار پادرد",
+        "status": "اشباع مطلوب و بدون کمبود",
         "status_class": "badge-optimal",
-        "desc": "رشد پیوسته از ۴۹ به ۵۸.۱"
+        "desc": "رشد تدریجی از ۳۸ به ۵۴.۲"
     },
     {
         "title_fa": "نسبت آتروژنیک (TG / HDL)",
-        "value": "1.02",
+        "value": "1.12",
         "unit": "Ratio",
-        "status": "ریسک قلبی بسیار ناچیز",
+        "status": "ریسک قلبی-عروقی بسیار پایین",
         "status_class": "badge-optimal",
-        "desc": "TG: 48 mg/dL | HDL: 47 mg/dL"
+        "desc": "TG: 56 mg/dL | HDL: 50 mg/dL"
     },
     {
         "title_fa": "سطح پایه متابولیسم (BMR)",
-        "value": "1,740",
+        "value": "1,765",
         "unit": "kcal/day",
-        "status": "سوخت‌وساز فعال عضلانی",
+        "status": "سوخت‌وساز استاندارد پایه",
         "status_class": "badge-optimal",
-        "desc": "مصرف پایه در فاز تثبیت وزن"
+        "desc": "کالری پایه برای فعالیت عضلانی"
     }
 ]
 
@@ -102,7 +103,6 @@ def find_browser_executable():
         if os.path.exists(c):
             return c
     
-    # Check PATH
     for name in ["msedge.exe", "chrome.exe", "msedge", "google-chrome"]:
         found = shutil.which(name)
         if found:
