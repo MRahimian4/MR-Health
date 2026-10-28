@@ -1431,9 +1431,28 @@ window.addEventListener('DOMContentLoaded', () => {
   if (savedKey) {
     const input = document.getElementById('api-key-input');
     if (input) input.value = savedKey;
+    const intakeInput = document.getElementById('intake-api-key');
+    if (intakeInput) intakeInput.value = savedKey;
   }
   initDropzone();
 });
+
+function syncApiKeyFromInput(val) {
+  val = (val || '').trim();
+  if (val) {
+    localStorage.setItem('user_ai_key', val);
+    const mInput = document.getElementById('api-key-input');
+    if (mInput) mInput.value = val;
+    const iInput = document.getElementById('intake-api-key');
+    if (iInput) iInput.value = val;
+  } else {
+    localStorage.removeItem('user_ai_key');
+    const mInput = document.getElementById('api-key-input');
+    if (mInput) mInput.value = '';
+    const iInput = document.getElementById('intake-api-key');
+    if (iInput) iInput.value = '';
+  }
+}
 
 // Settings Modal
 function toggleSettingsModal() {
@@ -1446,12 +1465,11 @@ function saveApiKey() {
   const input = document.getElementById('api-key-input');
   if (!input) return;
   const val = input.value.trim();
+  syncApiKeyFromInput(val);
   if (val) {
-    localStorage.setItem('user_ai_key', val);
     alert('کلید اختصاصی هوش مصنوعی با موفقیت ذخیره شد.');
   } else {
-    localStorage.removeItem('user_ai_key');
-    alert('کلید هوش مصنوعی حذف شد.');
+    alert('کلید هوش مصنوعی حذف گردید.');
   }
   toggleSettingsModal();
 }
@@ -1636,7 +1654,11 @@ async function startAnalysis() {
     return;
   }
 
-  const savedKey = localStorage.getItem('user_ai_key');
+  const intakeKey = document.getElementById('intake-api-key') ? document.getElementById('intake-api-key').value.trim() : '';
+  const savedKey = intakeKey || localStorage.getItem('user_ai_key');
+  if (intakeKey && intakeKey !== localStorage.getItem('user_ai_key')) {
+    localStorage.setItem('user_ai_key', intakeKey);
+  }
   const userNotes = document.getElementById('notes-input') ? document.getElementById('notes-input').value : '';
 
   // If running on web without key, prompt user
@@ -1645,13 +1667,22 @@ async function startAnalysis() {
     let backendActive = false;
     try {
       const statusResp = await fetch('/api/status', { method: 'GET' });
-      if (statusResp.ok) backendActive = true;
+      if (statusResp.ok) {
+        const sData = await statusResp.json();
+        if (sData.has_server_gemini_key) backendActive = true;
+      }
     } catch(e) {}
 
     if (!backendActive) {
-      const wantKey = confirm('برای تحلیل هوشمند فایل‌های شخصی شما، نیاز به کلید دسترسی هوش مصنوعی است.\nآیا مایلید هم‌اکنون کلید خود را وارد کنید؟\n(در صورت لغو، پرونده نمونه آماده نمایش داده خواهد شد).');
+      const wantKey = confirm('برای تحلیل هوشمند فایل‌های آزمایش شخصی شما، نیاز به کلید Google AI است.\nآیا مایلید کلید خود را در کادر مربوطه وارد نمایید؟\n(در صورت انصراف، پرونده نمونه آماده ۳ دوره نمایش داده خواهد شد).');
       if (wantKey) {
-        toggleSettingsModal();
+        const intakeInput = document.getElementById('intake-api-key');
+        if (intakeInput) {
+          intakeInput.focus();
+          intakeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          toggleSettingsModal();
+        }
         return;
       } else {
         loadDemoData();
