@@ -49,9 +49,20 @@ app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 async def serve_index():
     index_file = static_dir / "index.html"
     if not index_file.exists():
+        index_file = PROJECT_ROOT / "index.html"
+    if not index_file.exists():
         return HTMLResponse("<h1>MR.Health is loading...</h1>")
     with open(index_file, "r", encoding="utf-8") as f:
         return HTMLResponse(f.read())
+
+@app.get("/app.js")
+async def serve_app_js():
+    app_file = static_dir / "app.js"
+    if not app_file.exists():
+        app_file = PROJECT_ROOT / "app.js"
+    if not app_file.exists():
+        raise HTTPException(status_code=404, detail="app.js not found")
+    return FileResponse(str(app_file), media_type="application/javascript")
 
 @app.get("/api/status")
 async def get_status():
