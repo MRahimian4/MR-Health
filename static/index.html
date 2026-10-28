@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Mehran Rahimian">
 <title>MR.Health AI — سامانه هوشمند تحلیل آزمایشگاهی و پایش بالینی بیومارکرها</title>
 
 <!-- Fonts -->
@@ -699,6 +700,95 @@
     background: #ffffff;
     box-shadow: var(--glass-shadow);
   }
+
+  /* Developer Pill & Glassy Footer */
+  .developer-pill {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #bae6fd;
+    padding: 5px 14px;
+    border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+    transition: all 0.25s ease;
+  }
+
+  .developer-pill:hover {
+    border-color: #0284c7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+  }
+
+  .glass-footer {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.85);
+    padding: 24px 20px;
+    margin-top: 50px;
+    box-shadow: 0 -4px 20px rgba(2, 132, 199, 0.05);
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 14px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-logo-small {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+  }
+
+  .footer-dev-badge {
+    background: linear-gradient(135deg, rgba(224, 242, 254, 0.7) 0%, rgba(219, 234, 254, 0.5) 100%);
+    border: 1px solid #bae6fd;
+    border-radius: 30px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 11px;
+    color: #64748b;
+  }
+
 </style>
 </head>
 <body>
@@ -715,12 +805,17 @@
         <p>سامانه هوشمند چندحالته تحلیل چکاپ و آزمایشگاه بالینی</p>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div class="developer-pill">
+        <span style="font-size:11px; color:#475569;">توسعه‌دهنده:</span>
+        <strong style="color:#0369a1; font-size:12px;">مهران رحیمیان</strong>
+        <span class="en" style="font-size:10.5px; color:#0284c7; font-weight:800;">(Mehran Rahimian)</span>
+      </div>
       <div class="nav-badge">
         <span class="status-dot"></span>
-        <span>هوش مصنوعی فعال (Medical AI Engine)</span>
+        <span>هوش مصنوعی فعال</span>
       </div>
-      <button class="btn btn-secondary" onclick="toggleSettingsModal()">⚙️ کلید اختصاصی AI</button>
+      <button class="btn btn-secondary" onclick="toggleSettingsModal()">⚙️ کلید AI</button>
     </div>
   </header>
 
@@ -862,6 +957,35 @@
     </section>
 
   </main>
+
+    <!-- Glassy Footer with Developer Credits -->
+  <footer class="glass-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo-small">MR</div>
+          <div>
+            <div style="font-size:14px; font-weight:900; color:#0369a1;">MR.Health AI Platform</div>
+            <div style="font-size:11px; color:#64748b;">سامانه هوشمند پایش آزمایشگاهی و تحلیل بالینی بیومارکرها</div>
+          </div>
+        </div>
+        <div class="footer-dev-badge">
+          <span style="font-size:11.5px; color:#475569;">طراحی و توسعه‌یافته با افتخار توسط:</span>
+          <strong style="font-size:13.5px; color:#0284c7; margin:0 4px;">مهران رحیمیان</strong>
+          <span class="en" style="font-size:11.5px; color:#0369a1; font-weight:800;">(Mehran Rahimian)</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>
+          کلیه حقوق این سامانه محفوظ است © ۲۰۲۶ | <span class="en" style="font-weight:700;">Designed & Engineered by Mehran Rahimian</span>
+        </div>
+        <div style="color:#d97706; font-weight:700;">
+          ⚠️ تمامی تحلیل‌ها توسط هوش مصنوعی انجام شده و نیازمند تایید پزشک متخصص است.
+        </div>
+      </div>
+    </div>
+  </footer>
+
 
   <!-- Settings Modal for AI Key -->
   <div id="settings-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:100; align-items:center; justify-content:center;">
