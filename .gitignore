@@ -42,6 +42,10 @@ ENV/
 Thumbs.db
 desktop.ini
 
+# Binary tools & executables
+tools/
+*.exe
+
 # Temporary test screenshots
 *.png
 test*.html

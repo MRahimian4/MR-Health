@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR.Health AI — سامانه هوشمند تحلیل چندحالته چکاپ و آزمایشگاه</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: #0f766e;
+    --primary-dark: #042f2e;
+    --primary-light: #ccfbf1;
+    --accent: #0284c7;
+    --accent-light: #e0f2fe;
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --surface: #ffffff;
+    --bg: #f8fafc;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    direction: rtl;
+    text-align: right;
+    min-height: 100vh;
+  }
+
+  .en {
+    font-family: 'Inter', sans-serif !important;
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: isolate;
+  }
+
+  /* Top Navbar */
+  .navbar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-text h1 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brand-text p {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-badge {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    background: #f1f5f9;
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1050px;
+    margin: 24px auto;
+    padding: 0 16px;
+  }
+
+  /* Intake Card */
+  .intake-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 24px;
+  }
+
+  .intake-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 14px;
+  }
+
+  .intake-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .intake-header p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Grid Layout for Intake */
+  .intake-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .intake-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Upload Dropzone */
+  .dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 24px 16px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+  }
+
+  .dropzone:hover, .dropzone.dragover {
+    border-color: var(--primary);
+    background: #f0fdfa;
+  }
+
+  .dropzone-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+
+  .dropzone-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .dropzone-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .file-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .file-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+  }
+
+  .file-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: #334155;
+    direction: ltr;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+  }
+
+  .file-remove {
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 2px 6px;
+  }
+
+  /* Voice Recorder Card */
+  .voice-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .voice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .voice-title {
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .voice-timer {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--primary);
+    background: #ffffff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .voice-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  .record-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #ffffff;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .record-btn.recording {
+    background: #0f172a;
+    animation: recordPulse 1.2s infinite;
+  }
+
+  @keyframes recordPulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+
+  .voice-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .audio-preview {
+    width: 100%;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* Notes & API Key */
+  .form-group {
+    margin-top: 16px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12px;
+    resize: vertical;
+    transition: border 0.2s;
+  }
+
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.1);
+  }
+
+  .apikey-input-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .form-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    direction: ltr;
+  }
+
+  /* Action Buttons Bar */
+  .intake-actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Progress Overlay */
+  .progress-overlay {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #cbd5e1;
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px auto;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 420px;
+    margin: 16px auto 0 auto;
+    text-align: right;
+    font-size: 12px;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+  }
+
+  .step-item.active {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .step-item.done {
+    color: var(--success);
+  }
+
+  /* Results Frame */
+  #results-container {
+    display: none;
+  }
+
+  .results-topbar {
+    background: #042f2e;
+    color: #ffffff;
+    border-radius: 10px 10px 0 0;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .results-frame {
+    width: 100%;
+    height: 900px;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    background: #ffffff;
+    box-shadow: var(--shadow-lg);
+  }
+</style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-logo">MR</div>
+      <div class="brand-text">
+        <h1>MR.Health AI <span class="en" style="font-size:11px; font-weight:700; background:#f0fdfa; color:#0f766e; padding:1px 6px; border-radius:4px; border:1px solid #ccfbf1;">v2.0</span></h1>
+        <p>سامانه هوشمند تحلیل آزمایشگاهی و پایش بالینی بیومارکرها</p>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span class="en" style="font-weight:800;">Gemini 3.8 Flash</span> (چندحالته)
+      </div>
+      <button class="btn btn-secondary" onclick="toggleSettingsModal()">⚙️ کلید API</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Intake Card -->
+    <section class="intake-card" id="intake-section">
+      <div class="intake-header">
+        <h2>🔬 دریافت اسناد آزمایش، وویس صوتی و تحلیل بالینی</h2>
+        <p>تصاویر یا فایل PDF آزمایش خود را بارگذاری کنید. در صورت تمایل می‌توانید تا ۱ دقیقه وویس صوتی سوابق یا توضیحات تکمیلی اضافه کنید تا هوش مصنوعی نتایج را به صورت دقیق استخراج و تحلیل کند.</p>
+      </div>
+
+      <div class="intake-grid">
+        <!-- 1. Upload Lab Scan -->
+        <div>
+          <div class="form-label">
+            <span>📁 اسکن برگه‌های آزمایش (تصویر یا PDF)</span>
+            <span style="font-size:10px; color:var(--text-muted);">(چند صفحه‌ای مجاز است)</span>
+          </div>
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            <div class="dropzone-icon">📄</div>
+            <div class="dropzone-title">کلیک کنید یا فایل‌ها را به اینجا بکشید</div>
+            <div class="dropzone-desc">پشتیبانی از فرمت‌های JPG, PNG, WebP و PDF</div>
+            <input type="file" id="file-input" multiple accept="image/*,application/pdf" style="display:none;" onchange="handleFileSelect(event)">
+          </div>
+          <div class="file-list" id="file-list"></div>
+        </div>
+
+        <!-- 2. Voice Recorder (1 Min Limit) -->
+        <div class="voice-card">
+          <div class="voice-header">
+            <div class="voice-title">🎙️ ضبط توضیحات صوتی بیمار / ورزشکار</div>
+            <div class="voice-timer" id="voice-timer">00:00 / 01:00</div>
+          </div>
+          <div class="voice-controls">
+            <button class="record-btn" id="record-btn" onclick="toggleRecording()" title="شروع یا توقف ضبط">🎙️</button>
+            <div class="voice-hint" id="voice-hint">جهت ضبط صدای خود (حداکثر ۱ دقیقه) کلیک کنید</div>
+            <audio id="audio-player" class="audio-preview" controls></audio>
+            <div id="voice-actions" style="display:none; gap:8px;">
+              <button class="btn btn-secondary" style="font-size:10.5px; padding:4px 10px;" onclick="resetVoice()">🗑️ حذف وویس</button>
+            </div>
+          </div>
+          <div style="font-size:10px; color:#64748b; background:#f1f5f9; padding:6px 10px; border-radius:6px; line-height:1.4;">
+            💡 هوش مصنوعی مستقیماً به صدای شما گوش داده و سابقه جراحی، سبک تمرینات، مکمل‌ها یا علائم بدنی را در تحلیل منظور می‌کند.
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Textarea -->
+      <div class="form-group">
+        <label class="form-label" for="notes-input">
+          <span>✍️ توضیحات و سوابق تکمیلی (اختیاری)</span>
+          <span style="font-size:10.5px; color:#64748b;">(عمل جراحی، برنامه بدنسازی، دارو و مکمل، دردهای عضلانی و...)</span>
+        </label>
+        <textarea id="notes-input" class="form-textarea" placeholder="مثال: ۳ سال پیش ساسی بای‌پس داشتم، وزنم از ۱۲۶ به ۷۰ و الان ۷۸ رسیده، بدنسازی میرم ۳ جلسه، کراتین و وی مصرف می‌کنم، پادرد سابق داشتم که با ویتامین دی رفع شد..."></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="intake-actions">
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-primary" style="font-size:13.5px; padding:10px 22px;" id="submit-btn" onclick="startAnalysis()">
+            🚀 شروع تحلیل هوشمند با هوش مصنوعی
+          </button>
+          <button class="btn btn-secondary" style="font-size:12px; padding:10px 16px;" onclick="loadDemoData()">
+            ⚡ مشاهده نمونه آماده ۳ دوره (Demo)
+          </button>
+        </div>
+        <div style="font-size:11px; color:#64748b;">
+          🛡️ پردازش امن و محرمانه داده‌های پزشکی
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Overlay -->
+    <div class="progress-overlay" id="progress-overlay">
+      <div class="spinner"></div>
+      <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px;">درحال تحلیل چندحالته چکاپ با هوش مصنوعی...</h3>
+      <p style="font-size:12px; color:var(--text-muted);">لطفاً شکیبا باشید؛ مدارک و وویس صوتی توسط مدل هوش مصنوعی پردازش می‌شوند.</p>
+      
+      <div class="progress-steps">
+        <div class="step-item active" id="step-1">⏳ ۱. آماده‌سازی مدارک و استریم وویس صوتی</div>
+        <div class="step-item" id="step-2">🤖 ۲. پردازش چندرسانه‌ای توسط گوگل جمینای ۳.۸ فلش</div>
+        <div class="step-item" id="step-3">📊 ۳. ارزیابی ۳۵ بیومارکر، انطباق رفرنس‌ها و ترسیم ترندها</div>
+        <div class="step-item" id="step-4">📑 ۴. تدوین وب‌اپلیکیشن تعاملی و نسخه رسمی ۵ صفحه‌ای PDF</div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <section id="results-container">
+      <div class="results-topbar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:13px; font-weight:800;">📋 گزارش و داشبورد تعاملی نهایی</span>
+          <span id="result-status-tag" class="status-badge" style="background:#0f766e; color:#ffffff; border-color:#14b8a6;">آماده بهره‌برداری</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" id="pdf-download-btn" onclick="downloadCurrentPDF()">
+            📥 دانلود گزارش رسمی PDF (۵ صفحه)
+          </button>
+          <button class="btn btn-secondary" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.2);" onclick="resetToIntake()">
+            🔄 تحلیل آزمایش جدید
+          </button>
+        </div>
+      </div>
+      <iframe id="results-iframe" class="results-frame" src="about:blank"></iframe>
+    </section>
+
+  </main>
+
+  <!-- Settings Modal for API Key -->
+  <div id="settings-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+    <div style="background:#ffffff; border-radius:12px; padding:24px; max-width:460px; width:90%; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1); text-align:right;">
+      <h3 style="font-size:15px; font-weight:800; margin-bottom:8px;">🔑 تنظیم کلید Google Gemini API</h3>
+      <p style="font-size:11.5px; color:#64748b; line-height:1.5; margin-bottom:14px;">
+        جهت انجام تحلیل زنده بر روی مدارک شخصی، کلید اختصاصی جمینای خود را وارد کنید. کلید به صورت امن در حافظه محلی مرورگر شما ذخیره می‌شود. (در صورت خالی گذاشتن، از کلید سرور یا حالت نمونه آزمایشی استفاده خواهد شد).
+      </p>
+      <input type="password" id="api-key-input" class="form-input" style="width:100%; margin-bottom:14px;" placeholder="AIzaSy...">
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn btn-secondary" onclick="toggleSettingsModal()">بستن</button>
+        <button class="btn btn-primary" onclick="saveApiKey()">ذخیره کلید</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // State
+  let selectedFiles = [];
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordedAudioBlob = null;
+  let recordTimerInterval = null;
+  let recordSeconds = 0;
+  const MAX_RECORD_SECONDS = 60;
+  let latestPdfBase64 = "";
+
+  // On Load
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) {
+      document.getElementById('api-key-input').value = savedKey;
+    }
+  });
+
+  // Settings
+  function toggleSettingsModal() {
+    const modal = document.getElementById('settings-modal');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function saveApiKey() {
+    const val = document.getElementById('api-key-input').value.trim();
+    if (val) {
+      localStorage.setItem('gemini_api_key', val);
+    } else {
+      localStorage.removeItem('gemini_api_key');
+    }
+    toggleSettingsModal();
+    alert('تنظیمات کلید با موفقیت ذخیره شد.');
+  }
+
+  // File Handling
+  const dropzone = document.getElementById('dropzone');
+  ['dragenter', 'dragover'].forEach(name => {
+    dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+  });
+  ['dragleave', 'drop'].forEach(name => {
+    dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+  });
+  dropzone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    addFiles(files);
+  });
+
+  function handleFileSelect(e) {
+    addFiles(e.target.files);
+  }
+
+  function addFiles(files) {
+    for (let i = 0; i < files.length; i++) {
+      selectedFiles.push(files[i]);
+    }
+    renderFileList();
+  }
+
+  function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderFileList();
+  }
+
+  function renderFileList() {
+    const list = document.getElementById('file-list');
+    list.innerHTML = '';
+    selectedFiles.forEach((f, idx) => {
+      const item = document.createElement('div');
+      item.className = 'file-item';
+      item.innerHTML = `
+        <span class="file-name">📄 ${f.name} <span style="font-size:9px; color:#94a3b8;">(${(f.size/1024).toFixed(0)} KB)</span></span>
+        <span class="file-remove" onclick="removeFile(${idx})" title="حذف">&times;</span>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  // Voice Recording
+  async function toggleRecording() {
+    const btn = document.getElementById('record-btn');
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }
+
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(recordedAudioBlob);
+        const player = document.getElementById('audio-player');
+        player.src = audioUrl;
+        player.style.display = 'block';
+        document.getElementById('voice-actions').style.display = 'flex';
+        document.getElementById('voice-hint').innerText = 'وویس شما با موفقیت ضبط شد.';
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      recordSeconds = 0;
+      updateTimerDisplay();
+
+      const btn = document.getElementById('record-btn');
+      btn.classList.add('recording');
+      btn.innerText = '⏹️';
+      document.getElementById('voice-hint').innerText = 'درحال ضبط صدا... جهت پایان کلیک کنید';
+
+      recordTimerInterval = setInterval(() => {
+        recordSeconds++;
+        updateTimerDisplay();
+        if (recordSeconds >= MAX_RECORD_SECONDS) {
+          stopRecording();
+        }
+      }, 1000);
+
+    } catch (err) {
+      alert('خطا در دسترسی به میکروفون: ' + err.message);
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      clearInterval(recordTimerInterval);
+      const btn = document.getElementById('record-btn');
+      btn.classList.remove('recording');
+      btn.innerText = '🎙️';
+    }
+  }
+
+  function resetVoice() {
+    recordedAudioBlob = null;
+    audioChunks = [];
+    clearInterval(recordTimerInterval);
+    recordSeconds = 0;
+    updateTimerDisplay();
+    document.getElementById('audio-player').style.display = 'none';
+    document.getElementById('audio-player').src = '';
+    document.getElementById('voice-actions').style.display = 'none';
+    document.getElementById('voice-hint').innerText = 'جهت ضبط صدای خود (حداکثر ۱ دقیقه) کلیک کنید';
+    const btn = document.getElementById('record-btn');
+    btn.classList.remove('recording');
+    btn.innerText = '🎙️';
+  }
+
+  function updateTimerDisplay() {
+    const mins = Math.floor(recordSeconds / 60);
+    const secs = recordSeconds % 60;
+    const pad = (n) => n.toString().padStart(2, '0');
+    document.getElementById('voice-timer').innerText = `${pad(mins)}:${pad(secs)} / 01:00`;
+  }
+
+  // Analysis API
+  async function startAnalysis() {
+    if (selectedFiles.length === 0 && !recordedAudioBlob) {
+      alert('لطفاً حداقل یک فایل اسکن آزمایش انتخاب نمایید یا وویس ضبط کنید.');
+      return;
+    }
+
+    showProgress();
+    setStep(1);
+
+    const formData = new FormData();
+    selectedFiles.forEach(f => formData.append('files', f));
+    if (recordedAudioBlob) {
+      formData.append('audio', recordedAudioBlob, 'voice_notes.webm');
+    }
+    const notes = document.getElementById('notes-input').value;
+    if (notes) formData.append('notes', notes);
+
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) formData.append('api_key', savedKey);
+
+    setTimeout(() => setStep(2), 1200);
+    setTimeout(() => setStep(3), 3200);
+    setTimeout(() => setStep(4), 5200);
+
+    try {
+      const resp = await fetch('/api/analyze', {
+        method: 'POST',
+        body: formData
+      });
+      const res = await resp.json();
+      if (!res.success) throw new Error(res.error || 'خطا در تحلیل آزمایش');
+
+      displayResults(res);
+    } catch (err) {
+      hideProgress();
+      alert('خطا در پردازش هوشمند: ' + err.message);
+    }
+  }
+
+  async function loadDemoData() {
+    showProgress();
+    setStep(1);
+    setTimeout(() => setStep(2), 600);
+    setTimeout(() => setStep(3), 1200);
+    setTimeout(() => setStep(4), 1800);
+
+    try {
+      const resp = await fetch('/api/demo');
+      const res = await resp.json();
+      setTimeout(() => displayResults(res), 2000);
+    } catch (err) {
+      hideProgress();
+      alert('خطا در دریافت داده‌های دمو: ' + err.message);
+    }
+  }
+
+  function showProgress() {
+    document.getElementById('intake-section').style.display = 'none';
+    document.getElementById('progress-overlay').style.display = 'block';
+  }
+
+  function hideProgress() {
+    document.getElementById('progress-overlay').style.display = 'none';
+  }
+
+  function setStep(num) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`step-${i}`);
+      el.className = 'step-item';
+      if (i < num) el.classList.add('done');
+      if (i === num) el.classList.add('active');
+    }
+  }
+
+  function displayResults(res) {
+    hideProgress();
+    document.getElementById('results-container').style.display = 'block';
+    latestPdfBase64 = res.pdf_base64 || "";
+
+    const iframe = document.getElementById('results-iframe');
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(res.interactive_html);
+    doc.close();
+
+    window.scrollTo({ top: document.getElementById('results-container').offsetTop - 60, behavior: 'smooth' });
+  }
+
+  function resetToIntake() {
+    document.getElementById('results-container').style.display = 'none';
+    document.getElementById('intake-section').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function downloadCurrentPDF() {
+    if (latestPdfBase64) {
+      const byteChars = atob(latestPdfBase64);
+      const byteNums = new Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        byteNums[i] = byteChars.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNums);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'Comprehensive_Health_Report_Mehran_Rahimian.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      window.open('/api/download-pdf/Latest', '_blank');
+    }
+  }
+</script>
+</body>
+</html>
